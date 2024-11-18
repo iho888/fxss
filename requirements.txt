@@ -1,0 +1,5 @@
+MetaTrader5
+pymysql
+alpha_vantage
+ta
+pandas
