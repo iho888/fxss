@@ -17,9 +17,9 @@ def main():
     SYMBOLS = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCHF"]  # Add more pairs as needed
     TIMEFRAME = 1  # 1-minute chart
     NUM_BARS = 50
-    VOLUME = 1.0  # Lot size
-    PIPS_TP = 6  # Take Profit in pips
-    PIPS_SL = 6  # Stop Loss in pips
+    VOLUME = 3.0  # Lot size
+    PIPS_TP = 15  # Take Profit in pips
+    PIPS_SL = 15  # Stop Loss in pips
 
     while True:
         for symbol in SYMBOLS:
@@ -48,7 +48,7 @@ def main():
                 print(f"Buy signal detected for {symbol}")
                 if check_existing_order(symbol) == None:
                     result = place_order_with_pip_sl_tp(symbol, "buy", volume=VOLUME, pips_tp=PIPS_TP, pips_sl=PIPS_SL)
-                    monitor_position(result.order,5)
+                    monitor_position(result.order,10)
                     log_trade(symbol, result.order, "buy", VOLUME, data['close'].iloc[-1],data['RSI'].iloc[-1])
                 else:
                     print(f"Orders existed for {symbol}")
@@ -58,7 +58,7 @@ def main():
                 print(f"Sell signal detected for {symbol}")
                 if check_existing_order(symbol) == None:                
                     result = place_order_with_pip_sl_tp(symbol, "sell", volume=VOLUME, pips_tp=PIPS_TP, pips_sl=PIPS_SL)
-                    monitor_position(result.order,5)
+                    monitor_position(result.order,10)
                     log_trade(symbol, result.order, "sell", VOLUME, data['close'].iloc[-1],data['RSI'].iloc[-1])
                 else:
                     print(f"Orders existed for {symbol}") 
