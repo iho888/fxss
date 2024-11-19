@@ -27,6 +27,7 @@ def create_database_and_tables():
         create_trades_table_query = """
         CREATE TABLE IF NOT EXISTS trades (
             id INT AUTO_INCREMENT PRIMARY KEY,
+            ticket BIGINT NOT NULL,  -- Add ticket column as NOT NULL
             symbol VARCHAR(10),
             order_type VARCHAR(4),
             volume FLOAT,
@@ -34,7 +35,31 @@ def create_database_and_tables():
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         );
         """
+
+                # SQL Query to Create `trade_metrics` Table
+        create_trade_metrics_table = """
+        CREATE TABLE IF NOT EXISTS trade_metrics (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            trade_id INT NOT NULL,
+            rsi FLOAT NOT NULL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (trade_id) REFERENCES trades(id)
+        );
+        """
+
+        # SQL Query to Create `trade_closures` Table
+        create_trade_closures_table = """
+        CREATE TABLE IF NOT EXISTS trade_closures (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            trade_id INT NOT NULL,
+            close_reason VARCHAR(50) NOT NULL,
+            close_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (trade_id) REFERENCES trades(id)
+        );
+        """
         cursor.execute(create_trades_table_query)
+        cursor.execute(create_trade_metrics_table)
+        cursor.execute(create_trade_closures_table)
         print("Table 'trades' created or already exists.")
 
         # Commit changes and close connection

@@ -1,4 +1,5 @@
 import MetaTrader5 as mt5
+from mt5_util import initialize_mt5_with_retry
 
 def place_order(symbol, order_type, volume=0.1):
     price = mt5.symbol_info_tick(symbol).ask if order_type == "buy" else mt5.symbol_info_tick(symbol).bid
@@ -70,8 +71,8 @@ def place_order_with_pip_sl_tp(symbol, order_type, volume, pips_tp, pips_sl):
         "price": price,
         "sl": stop_loss,  # Stop Loss level
         "tp": take_profit,  # Take Profit level
-        "deviation": 3,  # Maximum allowed slippage in points
-        "magic": 123456,  # Unique identifier for the order
+        "deviation": 1,  # Maximum allowed slippage in points
+        "magic": 131313,  # Unique identifier for the order
         "comment": "Order with pip-based SL/TP",
         "type_time": mt5.ORDER_TIME_GTC,  # Good Till Cancelled
         "type_filling": mt5.ORDER_FILLING_FOK,  # Immediate or Cancel
@@ -87,5 +88,25 @@ def place_order_with_pip_sl_tp(symbol, order_type, volume, pips_tp, pips_sl):
         print(f"Order placed successfully: {result}")
 
     return result
+
+def check_existing_order(symbol):
+    if not initialize_mt5_with_retry():
+        print("Failed to initialize MetaTrader5")
+        return
+    orders = mt5.positions_get()
+    if orders is None:
+        print("Error:", mt5.last_error())
+        return None
+    if orders == None:
+        print("No orders found, error code =", mt5.last_error())
+        return None
+    elif len(orders) > 0:
+        for order in orders:
+            print(f"Order {order.ticket}, Symbol: {order.symbol}")
+            if order.symbol == symbol:
+                return order.ticket
+    else:
+        print("No active orders.")
+        return None
 
 
