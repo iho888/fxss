@@ -89,7 +89,7 @@ def place_order_with_pip_sl_tp(symbol, order_type, volume, pips_tp, pips_sl):
 
     return result
 
-def check_existing_order(symbol):
+def check_existing_order(symbol,order_type):
     if not initialize_mt5_with_retry():
         print("Failed to initialize MetaTrader5")
         return
@@ -103,7 +103,7 @@ def check_existing_order(symbol):
     elif len(orders) > 0:
         for order in orders:
             print(f"Order {order.ticket}, Symbol: {order.symbol}")
-            if order.symbol == symbol:
+            if order.symbol == symbol and order.type == order_type:
                 return order.ticket
     else:
         print("No active orders.")

@@ -46,7 +46,7 @@ def main():
             # Check Buy Signal
             if data['Buy_Signal'].iloc[-1]:
                 print(f"Buy signal detected for {symbol}")
-                if check_existing_order(symbol) == None:
+                if check_existing_order(symbol,0) == None:
                     result = place_order_with_pip_sl_tp(symbol, "buy", volume=VOLUME, pips_tp=PIPS_TP, pips_sl=PIPS_SL)
                     monitor_position(result.order,10)
                     log_trade(symbol, result.order, "buy", VOLUME, data['close'].iloc[-1],data['RSI'].iloc[-1])
@@ -56,7 +56,7 @@ def main():
             # Check Sell Signal
             if data['Sell_Signal'].iloc[-1]:
                 print(f"Sell signal detected for {symbol}")
-                if check_existing_order(symbol) == None:                
+                if check_existing_order(symbol,1) == None:                
                     result = place_order_with_pip_sl_tp(symbol, "sell", volume=VOLUME, pips_tp=PIPS_TP, pips_sl=PIPS_SL)
                     monitor_position(result.order,10)
                     log_trade(symbol, result.order, "sell", VOLUME, data['close'].iloc[-1],data['RSI'].iloc[-1])

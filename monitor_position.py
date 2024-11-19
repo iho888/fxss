@@ -2,6 +2,7 @@ import MetaTrader5 as mt5
 import threading
 import time
 from database import log_trade_closure
+from mt5_util import initialize_mt5_with_retry
 
 # Function to close a position based on a timer and ticket number
 def close_position_thread(ticket, time_limit_minutes, check_interval_seconds=10):
@@ -14,7 +15,7 @@ def close_position_thread(ticket, time_limit_minutes, check_interval_seconds=10)
         check_interval_seconds (int): The interval in seconds to recheck the position for profit.
     """
     # Connect to MetaTrader 5
-    if not mt5.initialize():
+    if not initialize_mt5_with_retry():
         print("Failed to initialize MetaTrader 5")
         return
 
@@ -58,6 +59,7 @@ def close_position_thread(ticket, time_limit_minutes, check_interval_seconds=10)
                 print(f"Successfully closed position {position.ticket} on {position.symbol}")
                 break  # Exit the loop after successfully closing the position
             else:
+                log_trade_closure(position.ticket, "CM")
                 print(f"Failed to close position {position.ticket}. Error: {result.retcode}")
 
         # Wait for the specified interval before checking again
@@ -85,4 +87,4 @@ def monitor_position(ticket, time_limit_minutes=5, check_interval_seconds=10):
 
 # Example usage
 # Monitor a position with ticket 2318611545 and close it if it's profitable after 5 minutes
-# monitor_position(2318611545, 5)
+# monitor_position(2318618672, 1)
