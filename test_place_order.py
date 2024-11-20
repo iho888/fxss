@@ -1,4 +1,4 @@
-from trade_executor import place_order_with_pip_sl_tp
+from trade_executor import place_order_with_pip_sl_tp, place_order_with_pip_dyamic
 import MetaTrader5 as mt5
 
 def test_place_order():
@@ -25,7 +25,7 @@ def test_place_order():
     # Place the order
     try:
         print(f"Testing {order_type} order for {symbol} with {pips_tp} TP and {pips_sl} SL...")
-        result = place_order_with_pip_sl_tp(symbol, order_type, volume, pips_tp, pips_sl)
+        result = place_order_with_pip_dyamic(symbol, "sell", volume=1,atr_value=4/10000,pips_tp=0,pips_sl=0)
 
         # Print the result
         if result:
