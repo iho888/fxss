@@ -19,7 +19,7 @@ def apply_scalping_strategy(data,symbol):
     data['RSI'] = RSIIndicator(data['close'], window=14).rsi()
 
     # Calculate ATR
-    if symbol == 'USDJPY':
+    if (symbol == 'USDJPY') or (symbol == 'AUDJPY') or (symbol == 'CHFJPY'):
 
         data['ATR'] = AverageTrueRange(data['high'], data['low'], data['close'], window=14).average_true_range() * 100
     else:

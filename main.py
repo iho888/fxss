@@ -5,12 +5,13 @@ from database import log_trade
 from monitor_position import monitor_position,initialize_mt5_with_retry
 from check_trading_session import  is_trading_session
 import time
+from monitor_rsi import start_rsi_monitoring_thread
 
 
 
 def main():
     # List of symbols to trade
-    SYMBOLS = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCHF"]  # Add more pairs as needed
+    SYMBOLS = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCHF","AUDJPY","CHFJPY","EURGBP","EURNZD","GBPAUD","NZDUSD","USDCAD"]  # Add more pairs as needed
     TIMEFRAME = 5  # 1-minute chart
     NUM_BARS = 50
     VOLUME = 1.0  # Lot size
@@ -46,6 +47,7 @@ def main():
                     print(f"Buy signal detected for {symbol}")
                     if check_existing_order(symbol,0) == None:
                         result = place_order_with_pip_dyamic(symbol, "buy", volume=VOLUME,atr_value=data['ATR'].iloc[-1]/10000,pips_tp=0,pips_sl=0)
+                        rsi_thread = start_rsi_monitoring_thread(symbol,result.order,1,70,30,5)
                         #monitor_position(result.order,10)
                         if result is None:
                             time.sleep(1)
@@ -60,6 +62,7 @@ def main():
                     if check_existing_order(symbol,1) == None:                
                         result = place_order_with_pip_dyamic(symbol, "sell", volume=VOLUME,atr_value=data['ATR'].iloc[-1]/10000,pips_tp=0,pips_sl=0)
                         #monitor_position(result.order,10)
+                        rsi_thread = start_rsi_monitoring_thread(symbol,result.order,1,70,30,5)
                         if result is None:
                             time.sleep(1)
                         else:

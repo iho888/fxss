@@ -23,7 +23,7 @@ def place_order(symbol, order_type, volume=0.1):
     return result
 
 
-def calculate_sl_tp(entry_price, atr_value, atr_multiplier=1.5, risk_reward_ratio=2, trade_type="buy"):
+def calculate_sl_tp(entry_price, atr_value, atr_multiplier=1.5, risk_reward_ratio=1.5, trade_type="buy"):
     """
     Calculate stop-loss and take-profit levels using ATR.
 
@@ -146,9 +146,11 @@ def place_order_with_pip_dyamic(symbol, order_type, volume, atr_value, pips_tp=0
         raise ValueError(f"Failed to retrieve tick data for {symbol}")
     
     spread = check_spread(symbol)
-    if spread > 3:
+    if spread > 2:
         print(f"Spread for {symbol} too wide: {spread}.")
         return 
+    else:
+        print(f"Good Spread for {symbol} : {spread}.")
     
     point = symbol_info.point  # Symbol's point value (e.g., 0.0001 for EURUSD)
     pip_value = 10 * point  # 1 pip = 10 points for most forex pairs
