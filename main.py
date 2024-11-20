@@ -45,7 +45,7 @@ def main():
                 if data['Buy_Signal'].iloc[-1]:
                     print(f"Buy signal detected for {symbol}")
                     if check_existing_order(symbol,0) == None:
-                        result = place_order_with_pip_dyamic(symbol, "buy", volume=VOLUME,atr_value=data['ATR'].iloc[-1],pips_tp=0,pips_sl=0)
+                        result = place_order_with_pip_dyamic(symbol, "buy", volume=VOLUME,atr_value=data['ATR'].iloc[-1]/10000,pips_tp=0,pips_sl=0)
                         #monitor_position(result.order,10)
                         if result is None:
                             time.sleep(1)
@@ -58,7 +58,7 @@ def main():
                 if data['Sell_Signal'].iloc[-1]:
                     print(f"Sell signal detected for {symbol}")
                     if check_existing_order(symbol,1) == None:                
-                        result = place_order_with_pip_dyamic(symbol, "sell", volume=VOLUME,atr_value=data['ATR'].iloc[-1],pips_tp=0,pips_sl=0)
+                        result = place_order_with_pip_dyamic(symbol, "sell", volume=VOLUME,atr_value=data['ATR'].iloc[-1]/10000,pips_tp=0,pips_sl=0)
                         #monitor_position(result.order,10)
                         if result is None:
                             time.sleep(1)

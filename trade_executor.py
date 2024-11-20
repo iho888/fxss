@@ -1,8 +1,7 @@
 import MetaTrader5 as mt5
 from mt5_util import initialize_mt5_with_retry
 
-stop_loss = 0
-take_profit = 0
+
 
 def place_order(symbol, order_type, volume=0.1):
     price = mt5.symbol_info_tick(symbol).ask if order_type == "buy" else mt5.symbol_info_tick(symbol).bid
@@ -49,10 +48,8 @@ def calculate_sl_tp(entry_price, atr_value, atr_multiplier=1.5, risk_reward_rati
     else:
         raise ValueError("Invalid trade_type. Use 'buy' or 'sell'.")
 
-    return {
-        "stop_loss": round(stop_loss, 5),  # Rounded to 5 decimals (typical for Forex)
-        "take_profit": round(take_profit, 5),
-    }
+    return round(stop_loss, 5),round(take_profit, 5)
+    
 
 def place_order_with_pip_sl_tp(symbol, order_type, volume, pips_tp, pips_sl):
     """
@@ -159,10 +156,10 @@ def place_order_with_pip_dyamic(symbol, order_type, volume, atr_value, pips_tp=0
     # Calculate SL and TP levels
     if order_type == "buy":
         price = tick.ask  # Entry price for buy orders
-        calculate_sl_tp(price,atr_value,1.5,2,order_type)
+        stop_loss, take_profit  = calculate_sl_tp(price,atr_value,1.5,2,order_type)
     elif order_type == "sell":
         price = tick.bid  # Entry price for sell orders
-        calculate_sl_tp(price,atr_value,1.5,2 ,order_type)        
+        stop_loss, take_profit  = calculate_sl_tp(price,atr_value,1.5,2 ,order_type)        
     else:
         raise ValueError("Invalid order type. Use 'buy' or 'sell'.")
 
@@ -242,7 +239,7 @@ def check_spread(symbol):
     point = symbol_info.point  # The smallest price change for the symbol
 
     # Calculate spread in pips
-    spread = (tick.ask - tick.bid) / point
+    spread = ((tick.ask - tick.bid) / point  )/10
 
     return round(spread, 1)  # Round to one decimal place
 
